@@ -155,7 +155,7 @@
   width: 608px;
   height: 605px;
   margin: auto;
-  background-image: url('./ground.png');
+  background-image: url('/ground.png');
 }
 .title {
   margin: auto;
