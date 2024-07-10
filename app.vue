@@ -8,7 +8,19 @@
     normal: 130,
     hard: 60
   }
+  function getDeviceType() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile|iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(userAgent);
   
+    if (isMobile) {
+      return "mobile";
+    } else {
+      return "desktop";
+    }
+  }
+
+  const type_device = getDeviceType()
+  let dir = "right";
   const start_game = () => {
     store.addItem('start')
     let ggg = setInterval(() => {
@@ -17,12 +29,12 @@
         const ctx = canvas.getContext("2d");
 
         const ground = new Image();
-        ground.src = "./ground.png";
+        ground.src = type_device == 'desktop'? "./ground.png": './ground_mob.png';
 
         const foodImg = new Image();
-        foodImg.src = "./food.png";
+        foodImg.src = type_device == 'desktop'? "./food.png": "./food_mob.png";
 
-        let box = 32;
+        let box = type_device == 'desktop'? 32: 16;
 
         let score = 0;
 
@@ -38,8 +50,6 @@
         };
 
         document.addEventListener("keydown", direction);
-
-        let dir = "right";
 
         function direction(event) {
           if((event.keyCode == 37 || event.keyCode == 65) && dir != "right")
@@ -118,10 +128,10 @@
   }
 </script>
 <template>
-  <div class="main">
+  <div class="main" v-if="type_device == 'desktop'">
     <a-card class="menu" v-if="store.state == 'begin'" >
       <a-typography-title class="title" >Змейка🐍</a-typography-title>
-      <a-typography-title class="btn" @click="start_game" >Начать</a-typography-title>
+      <a-typography-title class="btn" @click="start_game" >Начать<CaretRightOutlined /></a-typography-title>
       <a-typography-title class="btn ls bst" @click="() => {store.state = 'settings'}" >Настройка🛠</a-typography-title>
       <!-- <a-button @click="start_game">Начать</a-button> -->
     </a-card>
@@ -135,18 +145,70 @@
 
     <a-card class="menu" v-if="store.state == 'settings'" >
       <a-typography-title class="title ls st" >Настройки🛠</a-typography-title>
-      <a-typography-title :class="store.difficulty == 'easy'? 'btn ls ch': 'btn ls'" @click="() => {store.difficulty = 'easy'}" >Легкая</a-typography-title>
-      <a-typography-title :class="store.difficulty == 'normal'? 'btn ls ch': 'btn ls'" @click="() => {store.difficulty = 'normal'}" >Нормальная</a-typography-title>
-      <a-typography-title :class="store.difficulty == 'hard'? 'btn ls ch': 'btn ls'" @click="() => {store.difficulty = 'hard'}" >Сложная</a-typography-title>
-      <a-typography-title class="btn ls" @click="() => {store.state = 'begin'}" >Назад</a-typography-title>
+      <a-typography-title :class="store.difficulty == 'easy'? 'btn ls ch': 'btn ls'" @click="() => {store.difficulty = 'easy'}" >Легкая😴</a-typography-title>
+      <a-typography-title :class="store.difficulty == 'normal'? 'btn ls ch': 'btn ls'" @click="() => {store.difficulty = 'normal'}" >Нормальная🥴</a-typography-title>
+      <a-typography-title :class="store.difficulty == 'hard'? 'btn ls ch': 'btn ls'" @click="() => {store.difficulty = 'hard'}" >Сложная😵‍💫</a-typography-title>
+      <a-typography-title class="btn ls" @click="() => {store.state = 'begin'}" >Назад<RollbackOutlined /></a-typography-title>
       <!-- <a-button @click="start_game">Начать</a-button> -->
     </a-card>
     <!-- <a-button v-if="store.state == 'lose'" @click="start_game">Попробовать еще</a-button> -->
     <canvas v-if="store.state == 'start'" id="game" width="608" height="608"></canvas>
   </div>
+  <div class="main" v-else>
+    <a-card class="menu mob" v-if="store.state == 'begin'" >
+      <a-typography-title :level="3" class="title mb" >Змейка🐍</a-typography-title>
+      <a-typography-title :level="3" class="btn" @click="start_game" >Начать<CaretRightOutlined /></a-typography-title>
+      <a-typography-title :level="3" class="btn ls lsmb" @click="() => {store.state = 'settings'}" >Настройка🛠</a-typography-title>
+      <!-- <a-button @click="start_game">Начать</a-button> -->
+    </a-card>
+
+    <a-card class="menu mob" v-if="store.state == 'lose'" >
+      <a-typography-title :level="4" class="title mb" >Упс.. Вы проиграли😭</a-typography-title>
+      <a-typography-title :level="4" class="btn" @click="start_game" >Попробовать еще</a-typography-title>
+      <a-typography-title :level="4" class="btn ls lsmb" @click="() => {store.state = 'settings'}" >Настройка🛠</a-typography-title>
+      <!-- <a-button @click="start_game">Начать</a-button> -->
+    </a-card>
+
+    <a-card class="menu mob" v-if="store.state == 'settings'" >
+      <a-typography-title :level="4" class="title mb mg20" >Настройки🛠</a-typography-title>
+      <a-typography-title :level="4" :class="store.difficulty == 'easy'? 'btn ch': 'btn'" @click="() => {store.difficulty = 'easy'}" >Легкая😴</a-typography-title>
+      <a-typography-title :level="4" :class="store.difficulty == 'normal'? 'btn ch': 'btn'" @click="() => {store.difficulty = 'normal'}" >Нормальная🥴</a-typography-title>
+      <a-typography-title :level="4" :class="store.difficulty == 'hard'? 'btn ch': 'btn'" @click="() => {store.difficulty = 'hard'}" >Сложная😵‍💫</a-typography-title>
+      <a-typography-title :level="4" class="btn" @click="() => {store.state = 'begin'}" >Назад<RollbackOutlined /></a-typography-title>
+      <!-- <a-button @click="start_game">Начать</a-button> -->
+    </a-card>
+    <!-- <a-button v-if="store.state == 'lose'" @click="start_game">Попробовать еще</a-button> -->
+    <canvas v-if="store.state == 'start'" id="game" width="304" height="304"></canvas>
+    
+
+    <a-flex class="joystick" wrap="wrap">
+      <a-button class="j_btn" style="color: white !important;"><LeftOutlined /></a-button>
+      <a-button class="j_btn" @click="() => {if(dir != 'down') dir = 'up'}"><UpOutlined /></a-button>
+      <a-button class="j_btn" style="color: white !important;"><LeftOutlined /></a-button>
+
+      <a-button class="j_btn" @click="() => {if(dir != 'right') dir = 'left'}"><LeftOutlined /></a-button>
+      <a-button class="j_btn" style="color: white !important;"><LeftOutlined /></a-button>
+      <a-button class="j_btn" @click="() => {if(dir != 'left') dir = 'right'}"><RightOutlined /></a-button>
+
+      <a-button class="j_btn" style="color: white !important;"><LeftOutlined /></a-button>
+      <a-button class="j_btn" @click="() => {if(dir != 'up') dir = 'down'}"><DownOutlined /></a-button>
+      <a-button class="j_btn" style="color: white !important;"><LeftOutlined /></a-button>
+    </a-flex>
+
+    
+  </div>
 </template>
 
 <style>
+.joystick {
+  width: 210px;
+  margin: auto;
+  margin-top: 20px;
+}
+.j_btn {
+  width: 70px;
+  height: 60px;
+}
 .main {
   text-align: center;
   font-family: sans-serif;
@@ -157,25 +219,38 @@
   margin: auto;
   background-image: url('/ground.png');
 }
+.mob {
+  width: 304px;
+  height: 304px;
+  background-image: url('/ground_mob.png');
+}
 .title {
   margin: auto;
   margin-top: 220px; 
   padding: 5px;
-  background-color: rgba(255, 255, 255, 0.445);
+  color: white !important;
+  background-color: rgba(21, 92, 0, 0.521);
   border-radius: 10px;
   width: 200px;
+}
+.mb {
+  margin-top: 40px;
+}
+.mg20 {
+  margin-top: 27px;
 }
 .btn {
   margin: auto;
   margin-top: 10px !important;
   padding: 5px;
-  background-color: rgba(255, 255, 255, 0.445);
+  background-color: rgb(255, 255, 255);
   border-radius: 10px;
   width: 200px;
 }
 .btn:hover {
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.767);
+  background-color: rgb(73, 73, 73);
+  color: white !important;
 }
 .ls {
   width: 440px;
@@ -187,10 +262,14 @@
   margin-top: 80px !important;
 }
 .ch {
-  background-color: white;
+  background-color: rgb(21, 92, 0);
+  color: white !important;
 }
 .ch:hover {
-  background-color: white;
+  background-color: rgb(21, 92, 0);
   cursor: not-allowed;
+}
+.lsmb {
+  width: 200px;
 }
 </style>
