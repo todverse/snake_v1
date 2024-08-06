@@ -130,7 +130,7 @@
 <template>
   <div class="main" v-if="type_device == 'desktop'">
     <a-card class="menu" v-if="store.state == 'begin'" >
-      <a-typography-title class="title" >Змейка🐍</a-typography-title>
+      <a-typography-title class="title" >ЗЗмейка🐍</a-typography-title>
       <a-typography-title class="btn" @click="start_game" >Начать<CaretRightOutlined /></a-typography-title>
       <a-typography-title class="btn ls bst" @click="() => {store.state = 'settings'}" >Настройка🛠</a-typography-title>
       <!-- <a-button @click="start_game">Начать</a-button> -->
